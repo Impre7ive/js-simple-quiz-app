@@ -4,9 +4,87 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Simple Quiz App</title>
 </head>
 <body>
-      
+    <div id="quiz-form">
+       <div class="game-container">
+            <span id="title-text"></span>
+            <span id="question-number"></span>
+            <div class="radio-container">
+                <input type="radio" name="option" value="" id="optA">
+                <label for="optA" id="optA_text"></label>
+                <input type="radio" name="option" value="" id="optB">
+                <label for="optB" id="optB_text"></label>
+                <input type="radio" name="option" value="" id="optC">
+                <label for="optC" id="optC_text"></label>
+            </div>
+        </div>
+        <div id="results">
+        </div>
+        <input type="submit" id="submit-button" value="Submit">
+    </div>
+    <script>
+        var counter = 0;
+        var current_right = 0;
+        const max_right = 3;
+
+        const quiz = [{
+            question : "What is my favourite programming language?",
+            optionA : "PHP",
+            optionB : "JS",
+            optionC : "C#",
+            answer : "C#"
+        },{
+            question: "How many hours do I usually spend with PC?",
+            optionA: "8",
+            optionB: "10",
+            optionC: "15",
+            answer: "15"
+        },{
+            question: "In what company do I work?",
+            optionA: "SoftServe",
+            optionB: "EPAM",
+            optionC: "Freelance",
+            answer: "SoftServe"
+        }];
+        
+        function initForm() {
+            document.getElementById("optA").checked = true;
+            document.getElementById("title-text").innerText = quiz[counter].question;
+            document.getElementById("optA_text").innerText = quiz[counter].optionA;
+            document.getElementById("optB_text").innerText = quiz[counter].optionC;
+            document.getElementById("optC_text").innerText = quiz[counter].optionB;
+
+            counter++;
+            document.getElementById("question-number").innerText = counter + " / " + max_right;
+        }
+
+        function onSubmitEvent(event) {
+            event.preventDefault();
+
+            document.querySelectorAll("input[type=radio]").forEach(element => {
+                if (element.checked && document.getElementById(element.getAttribute("id") + "_text").innerText == quiz[counter - 1].answer)
+                    ++current_right;
+            });
+
+            if(counter != max_right) {
+                initForm();
+            } else {
+                document.getElementsByClassName("game-container")[0].classList.add("display-none");
+                document.getElementById("submit-button").classList.add("display-none");
+
+                let results = document.getElementById("results");
+                results.classList.add("display-block");
+                results.innerText = "Congratulations! Your score is " + current_right + " / " + max_right + "!";
+            }
+        }
+
+        var submitBtn = document.getElementById("submit-button");
+        submitBtn.addEventListener('click', onSubmitEvent);
+
+        initForm();
+    </script>
 </body>
 </html>
